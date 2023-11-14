@@ -73,6 +73,8 @@ int main(void)
 
 	
 	int iTemTimencoder1, iTemTimencoder2;
+	
+	uint8_t buf[3];
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -98,41 +100,71 @@ int main(void)
   MX_TIM3_Init();
   MX_I2C1_Init();
   MX_TIM2_Init();
+  MX_USART3_UART_Init();
   /* USER CODE BEGIN 2 */
 	HAL_TIM_Encoder_Start(&htim4, TIM_CHANNEL_ALL);
 	HAL_TIM_Encoder_Start(&htim2, TIM_CHANNEL_ALL);
   HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_1);
 	HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_2);
-//	HAL_GPIO_WritePin(BIN1_GPIO_Port, BIN1_Pin, GPIO_PIN_SET);
-//	HAL_GPIO_WritePin(AIN1_GPIO_Port, AIN1_Pin, GPIO_PIN_SET);
-//	HAL_GPIO_WritePin(BIN2_GPIO_Port, BIN2_Pin, GPIO_PIN_RESET);
-//	HAL_GPIO_WritePin(AIN2_GPIO_Port, AIN2_Pin, GPIO_PIN_RESET);
-
+	HAL_GPIO_WritePin(BIN1_GPIO_Port, BIN1_Pin, GPIO_PIN_SET);
+	HAL_GPIO_WritePin(AIN1_GPIO_Port, AIN1_Pin, GPIO_PIN_SET);
+	HAL_GPIO_WritePin(BIN2_GPIO_Port, BIN2_Pin, GPIO_PIN_RESET);
+	HAL_GPIO_WritePin(AIN2_GPIO_Port, AIN2_Pin, GPIO_PIN_RESET);
+  
+	
+	
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-		HAL_Delay(1000);
+		
+		HAL_UART_Receive(&huart3, buf, 1, 0XFFFF);
+		HAL_UART_Transmit(&huart3, buf, 1, 100);
+		if(buf[0] == '1')
+		{
+			__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_1, 100);
+			__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_2, 100);
+		}
+		else if(buf[0] == '3')
+		{
+			__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_1, 300);
+			__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_2, 300);
+		}
+		else if(buf[0] == '8')
+		{
+			__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_1, 800);
+			__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_2, 800);
+		}
+		
+		
+		iTemTimencoder1 = GetTim4encoder();
+		iTemTimencoder2 = GetTim2encoder();
 		printf("the pluse of tim4 is = %d\r\n", iTemTimencoder1);
 		printf("the pluse of tim2 is = %d\r\n", iTemTimencoder2);
+
 		if(g_iButtonState == 1)
 		{
 			HAL_GPIO_TogglePin(LED_GPIO_Port, LED_Pin);
-			HAL_GPIO_TogglePin(BIN1_GPIO_Port, BIN1_Pin);
-			HAL_GPIO_TogglePin(BIN2_GPIO_Port, BIN2_Pin);			
-			HAL_GPIO_TogglePin(AIN1_GPIO_Port, AIN1_Pin);			
-			HAL_GPIO_TogglePin(AIN2_GPIO_Port, AIN2_Pin);			
-			
+		
+//			__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_1, 100);
+//			__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_2, 100);
+
+//			HAL_GPIO_TogglePin(LED_GPIO_Port, LED_Pin);
+//			HAL_GPIO_TogglePin(BIN1_GPIO_Port, BIN1_Pin);
+//			HAL_GPIO_TogglePin(BIN2_GPIO_Port, BIN2_Pin);			
+//			HAL_GPIO_TogglePin(AIN1_GPIO_Port, AIN1_Pin);			
+//			HAL_GPIO_TogglePin(AIN2_GPIO_Port, AIN2_Pin);
+		
+		
 		}
-    
-		MPU_Get_Gyroscope(&gyrox, &gyroy, &gyroz);
-		MPU_Get_Accelerometer(&accx, &accy, &accz);		
-		printf("gyrox=%d, gyroy=%d, gytoz=%d \n ", gyrox, gyroy, gyroz);
-		printf("accx=%d, accy=%d, accz=%d \n ", accx, accy, accz);
-//		iTemTimencoder1 = GetTim4encoder();
-//		iTemTimencoder2 = GetTim2encoder();
+//    
+//		MPU_Get_Gyroscope(&gyrox, &gyroy, &gyroz);
+//		MPU_Get_Accelerometer(&accx, &accy, &accz);		
+//		printf("gyrox=%d, gyroy=%d, gytoz=%d \n ", gyrox, gyroy, gyroz);
+//		printf("accx=%d, accy=%d, accz=%d \n ", accx, accy, accz);
+
 //		printf("the pluse of tim4 is = %d\r\n", iTSSemTimencoder1);
 //		printf("the pluse of tim2 is = %d\r\n", iTemTimencoder2);
 //		HAL_GPIO_TogglePin(LED_GPIO_Port,LED_Pin);
@@ -177,10 +209,13 @@ void SystemClock_Config(void)
   /** Initializes the RCC Oscillators according to the specified parameters
   * in the RCC_OscInitTypeDef structure.
   */
-  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI;
+  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSE;
+  RCC_OscInitStruct.HSEState = RCC_HSE_ON;
+  RCC_OscInitStruct.HSEPredivValue = RCC_HSE_PREDIV_DIV1;
   RCC_OscInitStruct.HSIState = RCC_HSI_ON;
-  RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_DEFAULT;
-  RCC_OscInitStruct.PLL.PLLState = RCC_PLL_NONE;
+  RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
+  RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSE;
+  RCC_OscInitStruct.PLL.PLLMUL = RCC_PLL_MUL9;
   if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
   {
     Error_Handler();
@@ -190,12 +225,12 @@ void SystemClock_Config(void)
   */
   RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
                               |RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2;
-  RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_HSI;
+  RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
   RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
-  RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV1;
+  RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV2;
   RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV1;
 
-  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_0) != HAL_OK)
+  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_2) != HAL_OK)
   {
     Error_Handler();
   }
