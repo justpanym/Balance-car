@@ -1,5 +1,5 @@
 miaolibs\button.o: ..\Core\Src\Button.c
-miaolibs\button.o: ../Core/Inc/Button.h
+miaolibs\button.o: ../Core/Inc/button.h
 miaolibs\button.o: ../Core/Inc/main.h
 miaolibs\button.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h
 miaolibs\button.o: ../Core/Inc/stm32f1xx_hal_conf.h

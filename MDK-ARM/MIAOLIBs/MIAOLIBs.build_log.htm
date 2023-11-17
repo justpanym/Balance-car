@@ -22,18 +22,25 @@ Dialog DLL:      TCM.DLL V1.53.0.0
  
 <h2>Project:</h2>
 C:\Users\pan\Desktop\homework\MIAOLIBs\MDK-ARM\MIAOLIBs.uvprojx
-Project File Date:  11/09/2023
+Project File Date:  11/15/2023
 
 <h2>Output:</h2>
 *** Using Compiler 'V5.06 update 7 (build 960)', folder: 'E:\Keil_v5\ARM\ARMCC\Bin'
 Build target 'MIAOLIBs'
-assembling startup_stm32f103xb.s...
-compiling tim.c...
 compiling main.c...
+../Core/Src/main.c(73): warning:  #177-D: variable "iTemTimencoder1"  was declared but never referenced
+  	int iTemTimencoder1, iTemTimencoder2;
+../Core/Src/main.c(73): warning:  #177-D: variable "iTemTimencoder2"  was declared but never referenced
+  	int iTemTimencoder1, iTemTimencoder2;
+../Core/Src/main.c(74): warning:  #177-D: variable "v1"  was declared but never referenced
+  	float v1, v2;
+../Core/Src/main.c(74): warning:  #177-D: variable "v2"  was declared but never referenced
+  	float v1, v2;
+../Core/Src/main.c: 4 warnings, 0 errors
 linking...
-Program Size: Code=9924 RO-data=312 RW-data=32 ZI-data=1400  
+Program Size: Code=11304 RO-data=312 RW-data=36 ZI-data=1468  
 FromELF: creating hex file...
-"MIAOLIBs\MIAOLIBs.axf" - 0 Error(s), 0 Warning(s).
+"MIAOLIBs\MIAOLIBs.axf" - 0 Error(s), 4 Warning(s).
 
 <h2>Software Packages used:</h2>
 
@@ -57,7 +64,7 @@ Package Vendor: Keil
 
    * Component: ARM::CMSIS:CORE:5.5.0
       Include file:  CMSIS\Core\Include\tz_context.h
-Build Time Elapsed:  00:00:02
+Build Time Elapsed:  00:00:03
 </pre>
 </body>
 </html>
