@@ -37,3 +37,4 @@ miaolibs\main.o: ../Core/Inc/tim.h
 miaolibs\main.o: ../Core/Inc/usart.h
 miaolibs\main.o: E:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
 miaolibs\main.o: ../Core/Inc/gpio.h
+miaolibs\main.o: E:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
