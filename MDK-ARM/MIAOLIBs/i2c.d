@@ -33,3 +33,5 @@ miaolibs\i2c.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h
 miaolibs\i2c.o: ../Core/Inc/Button.h
 miaolibs\i2c.o: ../Core/Inc/encoder.h
 miaolibs\i2c.o: ../Core/Inc/mpu6050.h
+miaolibs\i2c.o: ../Core/Inc/control.h
+miaolibs\i2c.o: ../Core/Inc/filter.h

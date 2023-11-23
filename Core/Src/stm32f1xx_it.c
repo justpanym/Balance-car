@@ -185,6 +185,27 @@ void PendSV_Handler(void)
 void SysTick_Handler(void)
 {
   /* USER CODE BEGIN SysTick_IRQn 0 */
+	g_ucMainEventCount++;
+	if(g_ucMainEventCount >= 5)
+	{
+		g_ucMainEventCount = 0;
+		GetMpuData();
+		AngleCalculate();
+	}
+	
+  g_ucMainEventCount++;
+  if(g_ucMainEventCount>=5)//SysTick是1ms一次，这里判断语句大于5就是5ms运行一次
+    {
+        g_ucMainEventCount=0;
+        GetMotorPulse();
+    }else if(g_ucMainEventCount==1)
+    {
+        g_nLeftMotorOutput = SpeedInnerControl(g_nLeftMotorPulse,g_nSpeedTarget);        
+    }else if(g_ucMainEventCount==2)
+    {
+        SetMotorVoltageAndDirection(g_nLeftMotorOutput);
+    }
+
   ButtonScan();
   /* USER CODE END SysTick_IRQn 0 */
   HAL_IncTick();

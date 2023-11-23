@@ -34,6 +34,7 @@ extern "C" {
 #include "Button.h"
 #include "encoder.h"
 #include "mpu6050.h"
+#include "control.h"
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/

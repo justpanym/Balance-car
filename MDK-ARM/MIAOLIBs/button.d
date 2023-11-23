@@ -32,4 +32,6 @@ miaolibs\button.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_tim_ex.h
 miaolibs\button.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h
 miaolibs\button.o: ../Core/Inc/encoder.h
 miaolibs\button.o: ../Core/Inc/mpu6050.h
+miaolibs\button.o: ../Core/Inc/control.h
+miaolibs\button.o: ../Core/Inc/filter.h
 miaolibs\button.o: ../Core/Inc/stm32f1xx_it.h
