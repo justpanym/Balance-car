@@ -68,10 +68,10 @@ int main(void)
 {
   /* USER CODE BEGIN 1 */
 //  int iTempTim4Encoder; //临时存放从TIM4编码器接口捕获到的脉冲数�?
-  short accx, accy, accz;
-  short gyrox, gyroy, gyroz;		
-	int iTemTimencoder1, iTemTimencoder2;
-	float v1, v2;
+//  short accx, accy, accz;
+//  short gyrox, gyroy, gyroz;		
+//	int iTemTimencoder1, iTemTimencoder2;
+//	float v1, v2;
 	
   /* USER CODE END 1 */
 
@@ -106,9 +106,9 @@ int main(void)
   HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_1);
 	HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_2);
 	HAL_GPIO_WritePin(BIN1_GPIO_Port, BIN1_Pin, GPIO_PIN_SET);
-	HAL_GPIO_WritePin(AIN1_GPIO_Port, AIN1_Pin, GPIO_PIN_SET);
+//	HAL_GPIO_WritePin(AIN1_GPIO_Port, AIN1_Pin, GPIO_PIN_SET);
 	HAL_GPIO_WritePin(BIN2_GPIO_Port, BIN2_Pin, GPIO_PIN_RESET);
-	HAL_GPIO_WritePin(AIN2_GPIO_Port, AIN2_Pin, GPIO_PIN_RESET);
+//	HAL_GPIO_WritePin(AIN2_GPIO_Port, AIN2_Pin, GPIO_PIN_RESET);
   
 	
 	if(!MPU_Init())
@@ -120,28 +120,40 @@ int main(void)
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
-  {
+  {	
+			printf("小车角度 = %f", g_fCarAngle);
+			HAL_Delay(500);
+			HAL_GPIO_TogglePin(LED_GPIO_Port,LED_Pin);
 		
-		HAL_Delay(1000);
-		iTemTimencoder1 = GetTim4encoder();
-		iTemTimencoder2 = GetTim2encoder();
-		v1 = (18.84/1536)*iTemTimencoder1 ;
-		v2 = (18.84/1536)*iTemTimencoder2 ;
-		printf("v1 = %.2f(cm/s), v2 = %.2f(cm/s)\r\n", v1, v2);   //每隔�?秒获取�?�度
-		
-		MPU_Get_Gyroscope(&gyrox, &gyroy, &gyroz);
-		MPU_Get_Accelerometer(&accx, &accy, &accz);		
-		printf("gyrox=%d, gyroy=%d, gytoz=%d \n ", gyrox, gyroy, gyroz);  //获取加�?�度�?
-		printf("accx=%d, accy=%d, accz=%d \n ", accx, accy, accz);
-		
-		if(g_iButtonState == 1)
-		{
-			HAL_GPIO_TogglePin(LED_GPIO_Port, LED_Pin);
-			HAL_GPIO_TogglePin(BIN1_GPIO_Port, BIN1_Pin);
-			HAL_GPIO_TogglePin(BIN2_GPIO_Port, BIN2_Pin);			
-			HAL_GPIO_TogglePin(AIN1_GPIO_Port, AIN1_Pin);			
-			HAL_GPIO_TogglePin(AIN2_GPIO_Port, AIN2_Pin);
-		}
+		  if(g_iButtonState == 1)
+  {            
+      while(HAL_GPIO_ReadPin(BUTTON_GPIO_Port,BUTTON_Pin)==GPIO_PIN_RESET);//按键松手检测
+      g_nSpeedTarget +=10;
+      HAL_GPIO_TogglePin(LED_GPIO_Port,LED_Pin);
+      HAL_Delay(10);
+  }
+			printf("$%.1f %.1f;", (float)g_nLeftMotorPulse, (float)g_nSpeedTarget);//发送到地面站，显示波形
+
+//		HAL_Delay(1000);
+//		iTemTimencoder1 = GetTim4encoder();
+//		iTemTimencoder2 = GetTim2encoder();
+//		v1 = (18.84/1536)*iTemTimencoder1 ;
+//		v2 = (18.84/1536)*iTemTimencoder2 ;
+//		printf("v1 = %.2f(cm/s), v2 = %.2f(cm/s)\r\n", v1, v2);   //每隔�?秒获取�?�度
+//		
+//		MPU_Get_Gyroscope(&gyrox, &gyroy, &gyroz);
+//		MPU_Get_Accelerometer(&accx, &accy, &accz);		
+//		printf("gyrox=%d, gyroy=%d, gytoz=%d \n ", gyrox, gyroy, gyroz);  //获取加�?�度�?
+//		printf("accx=%d, accy=%d, accz=%d \n ", accx, accy, accz);
+//		
+//		if(g_iButtonState == 1)
+//		{
+//			HAL_GPIO_TogglePin(LED_GPIO_Port, LED_Pin);
+//			HAL_GPIO_TogglePin(BIN1_GPIO_Port, BIN1_Pin);
+//			HAL_GPIO_TogglePin(BIN2_GPIO_Port, BIN2_Pin);			
+//			HAL_GPIO_TogglePin(AIN1_GPIO_Port, AIN1_Pin);			
+//			HAL_GPIO_TogglePin(AIN2_GPIO_Port, AIN2_Pin);
+//		}
     
 		
 

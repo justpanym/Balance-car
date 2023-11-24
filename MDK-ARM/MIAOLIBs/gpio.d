@@ -33,3 +33,5 @@ miaolibs\gpio.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h
 miaolibs\gpio.o: ../Core/Inc/Button.h
 miaolibs\gpio.o: ../Core/Inc/encoder.h
 miaolibs\gpio.o: ../Core/Inc/mpu6050.h
+miaolibs\gpio.o: ../Core/Inc/control.h
+miaolibs\gpio.o: ../Core/Inc/filter.h
